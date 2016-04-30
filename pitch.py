@@ -8,3 +8,8 @@ def freq2Note(freq, ref){
   note = (math.log(ratio) / math.log(2)) * 12
   return note + 33
   }
+  
+  def pitchOffset(desired, actual){
+    ratio = desired / actual
+    return (math.log(ratio) / math.log(2)) *12
+    }
