@@ -41,7 +41,7 @@ def onKeyMove(num, pos)
     setAT(0)
     
 def noteOn(num, vel)
-  for(i=0;i<sizeof(zones);i++)
+  for(i=0;i<sizeof(zones);i+1)
     zone = zones.getAt(i)
     if num => zone.keyLo && num <= zone.keyHi && vel => zone.velLo && vel <= zone.velHi
       note = num + zone.transpose
@@ -49,7 +49,7 @@ def noteOn(num, vel)
       sendMidi(NOTE_ON, zone.channel, note, attackVel)
       
 def noteOff(num, vel)
-  for(i=0;i<sizeof(zones);i++)
+  for(i=0;i<sizeof(zones);i+1)
     zone = zones.getAt(i)
     if num => zone.keyLo && num <= zone.keyHi && attackVel[num] => zone.velLo && vel <= zone.velHi
       note = num + zone.transpose
@@ -57,7 +57,7 @@ def noteOff(num, vel)
       sendMidi(NOTE_OFF, zone.channel, note, releaseVel)
       
 def setAT(num, val)
-  for(i=0;i<sizeof(zones);i++)
+  for(i=0;i<sizeof(zones);i+1)
     zone = zones.getAt(i)
     if num => zone.keyLo && num <= zone.keyHi
       if zone.atMode == OFF
