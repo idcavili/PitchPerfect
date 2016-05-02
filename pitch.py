@@ -23,6 +23,7 @@ def onKeyMove(num, pos)
     deltaTime = getTime() - lastTime
     vel = deltaPos / deltaTime
     note[num] = 1
+    attackVel[num] = vel
     noteOn(num, vel)
   elif pos > thresh && note[num] == 1
     lastPos = pos
@@ -33,4 +34,39 @@ def onKeyMove(num, pos)
     vel = deltaPos / deltaTime
     note[num] = 1
     noteOff(num, vel)
+  elif pos => atThresh
+    lastPos = pos
+    setAT(num, pos - atThresh)
+  elif pos < atThresh && lastPos => atThresh
+    setAT(0)
     
+def noteOn(num, vel)
+  for(i=0;i<sizeof(zones);i++)
+    zone = zones.getAt(i)
+    if num => zone.keyLo && num <= zone.keyHi && vel => zone.velLo && vel <= zone.velHi
+      note = num + zone.transpose
+      attackVel = curve(vel, zone.curve) * (zone.scale / 100) + zone.offset
+      sendMidi(NOTE_ON, zone.channel, note, attackVel)
+      
+def noteOff(num, vel)
+  for(i=0;i<sizeof(zones);i++)
+    zone = zones.getAt(i)
+    if num => zone.keyLo && num <= zone.keyHi && attackVel[num] => zone.velLo && vel <= zone.velHi
+      note = num + zone.transpose
+      releaseVel = curve(vel, zone.curve) * (zone.scale / 100) + zone.offset
+      sendMidi(NOTE_OFF, zone.channel, note, releaseVel)
+      
+def setAT(num, val)
+  for(i=0;i<sizeof(zones);i++)
+    zone = zones.getAt(i)
+    if num => zone.keyLo && num <= zone.keyHi
+      if zone.atMode == OFF
+        continue
+      else
+        atVal = curve(val, zone.atCurve)
+        if zone.atMode == MONO
+          sendMidi(MONO_AT, zone.channel, atVal, null)
+        elif zone.atMode == POLY
+          sendMidi(POLY_AT, zone.channel, num + zone.transpose, atVal)
+
+
