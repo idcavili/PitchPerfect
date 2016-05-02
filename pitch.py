@@ -25,10 +25,10 @@ def onKeyMove(num, pos):
     note[num] = 1
     attackVel[num] = vel
     noteOn(num, vel)
-  elif pos > thresh && note[num] == 1:
+  elif pos > thresh & note[num] == 1:
     lastPos = pos
     lastTime = getTime()
-  elif pos < thresh && note[num] == 1:
+  elif pos < thresh & note[num] == 1:
     deltaPos = pos - lastPos
     deltaTime - getTime() - lastTime
     vel = deltaPos / deltaTime
@@ -37,13 +37,13 @@ def onKeyMove(num, pos):
   elif pos => atThresh:
     lastPos = pos
     setAT(num, pos - atThresh)
-  elif pos < atThresh && lastPos => atThresh:
+  elif pos < atThresh & lastPos => atThresh:
     setAT(0)
     
 def noteOn(num, vel):
   for i in xrange(sizeof(zones)):
     zone = zones.getAt(i)
-    if num => zone.keyLo && num <= zone.keyHi && vel => zone.velLo && vel <= zone.velHi:
+    if num => zone.keyLo & num <= zone.keyHi & vel => zone.velLo & vel <= zone.velHi:
       note = num + zone.transpose
       attackVel = curve(vel, zone.curve) * (zone.scale / 100) + zone.offset
       sendMidi(NOTE_ON, zone.channel, note, attackVel)
@@ -51,7 +51,7 @@ def noteOn(num, vel):
 def noteOff(num, vel):
   for i in xrange(sizeof(zones)):
     zone = zones.getAt(i)
-    if num => zone.keyLo && num <= zone.keyHi && attackVel[num] => zone.velLo && vel <= zone.velHi:
+    if num => zone.keyLo & num <= zone.keyHi & attackVel[num] => zone.velLo & vel <= zone.velHi:
       note = num + zone.transpose
       releaseVel = curve(vel, zone.curve) * (zone.scale / 100) + zone.offset
       sendMidi(NOTE_OFF, zone.channel, note, releaseVel)
@@ -59,7 +59,7 @@ def noteOff(num, vel):
 def setAT(num, val):
   for i in xrange(sizeof(zones)):
     zone = zones.getAt(i)
-    if num => zone.keyLo && num <= zone.keyHi:
+    if num => zone.keyLo & num <= zone.keyHi:
       if zone.atMode == OFF:
         continue
       else:
