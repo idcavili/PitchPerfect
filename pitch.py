@@ -14,6 +14,15 @@ def pitchOffset(desired, actual):
 def semitone(freq, ref):
   return math.floor(freq2Note(freq, ref)) + 36
   
+def semitoneCent(freq, ref):
+  pitch = freq2Note(freq, ref)
+  semitone = math.floor(pitch) + 36
+  cent = pitch - semitone * 100
+  if cent > 50:
+    semitone += 1
+    cent = 100 - cent
+  return {"semi": semitone, "cent": cent}
+  
 def onKeyMove(num, pos):
   if pos < thresh & note[num] == 0:
     lastPos = pos
