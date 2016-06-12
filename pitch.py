@@ -77,5 +77,34 @@ def setAT(num, val):
           sendMidi(MONO_AT, zone.channel, atVal, null)
         elif zone.atMode == POLY:
           sendMidi(POLY_AT, zone.channel, num + zone.transpose, atVal)
+          
+  def onSample(sample):
+    if noteState == OFF && sample.rms => thresh:
+      noteState = ON
+      expVal = vol(sample.rms)
+      sendMidi(CC, string.channel, EXP, expVal)
+      pitch = detectPitch(sample)
+      note = getSemitone(pitch)
+      pbVal = getPB(pitch)
+      sendMidi(PB, string.channel, pbVal)
+      sendMidi(NOTE_ON, string.channel, note, VEL)
+    elif noteState = ON && sample.rms => thresh:
+      expVal = vol(sample.rms)
+      sendMidi(CC, string.channel, EXP, expVal)
+      pitch = detectPitch(sample)
+      if abs(pitch - lastPitch) < 1 && pitch - lastPitch > 0:
+        pbVal = getPB(pitch, note)
+        sendMidi(PB, string.channel, pbVal)
+        lastPitch = pitch
+      else:
+        pitch = detectPitch(sample)
+        note = getSemitone(pitch)
+        pbVal = getPB(pitch)
+        sendMidi(PB, string.channel, pbVal)
+        sendMidi(NOTE_ON, string.channel, note, VEL)
+    elif noteState == ON && sample.rms < thresh:
+      noteState = OFF
+      sendMidi(NOTE_OFF, string.channel, note, VEL)
+      
 
 
