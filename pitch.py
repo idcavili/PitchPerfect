@@ -114,7 +114,7 @@ def getSemitone(note):
   semitone = int(note)
   cent = frac(note)
   if cent > 0.5:
-    semitone++
+    semitone += 1
   return semitone
 
 def getPB(note):
