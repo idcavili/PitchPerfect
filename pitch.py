@@ -106,5 +106,24 @@ def setAT(num, val):
       noteState = OFF
       sendMidi(NOTE_OFF, string.channel, note, VEL)
       
+def detectPitch(sample):
+  note = freq2Note(sample.pitch, ref)
+  return note
 
+def getSemitone(note):
+  semitone = int(note)
+  cent = frac(note)
+  if cent > 0.5:
+    semitone++
+  return semitone
 
+def getPB(note):
+  cent = frac(note)
+  if cent > 0.5:
+    cent = 1 - cent
+  semitone = cent * 100
+  step = bendRange / 8192
+  pb = semitone / step
+  pb = pb + 8192
+  return pb
+  
