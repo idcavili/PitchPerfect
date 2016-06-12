@@ -83,7 +83,7 @@ def setAT(num, val):
       noteState = ON
       expVal = vol(sample.rms)
       sendMidi(CC, string.channel, EXP, expVal)
-      pitch = detectPitch(sample)
+      pitch = detectPitch(sample) + pitchOffset
       note = getSemitone(pitch)
       pbVal = getPB(pitch)
       sendMidi(PB, string.channel, pbVal)
